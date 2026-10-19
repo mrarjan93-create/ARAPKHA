@@ -124,7 +124,7 @@ if submitted:
             (b3_name, b3_univ, b3_college, b3_dept, b3_country, b3_email, b3_phone)
         ]
 
-        for idx, (name, univ, coll, dept, country, email, phone) in enumerate(authors_data, 1):
+        for name, univ, coll, dept, country, email, phone in authors_data:
             if name:
                 p_b = doc.add_paragraph()
                 p_b.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -146,7 +146,7 @@ if submitted:
 
         # 3. الملخص العربي والكلمات المفتاحية
         add_heading("ملخص البحث")
-        add_body(abstract_ar, font_size=12) # خط 12 حسب طلبكم
+        add_body(abstract_ar, font_size=12)
         
         if keywords_ar:
             p_k = doc.add_paragraph()
@@ -193,3 +193,18 @@ if submitted:
             add_body(body)
 
         if references:
+            add_heading("المصادر والمراجع (نظام APA)")
+            add_body(references)
+
+        # حفظ الملف لتنزيله
+        buffer = io.BytesIO()
+        doc.save(buffer)
+        buffer.seek(0)
+
+        st.success("تم توليد ملف البحث بنجاح وفق التعديلات الجديدة!")
+        st.download_button(
+            label="📥 تحميل ملف البحث بصيغة Word (.docx)",
+            data=buffer,
+            file_name=f"Research_{title_ar[:15]}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
